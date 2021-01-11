@@ -15,4 +15,4 @@ app.post("/upload", upload.single("img"), (req, res) => {
   res.status(200).send({ filename: path.join("imgs", req.file.filename) });
 });
 
-app.listen(1502, () => console.log("Server started"));
+app.listen(80, () => console.log("Server started"));
