@@ -1,19 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image View</title>
-  </head>
-  <body>
-    <div style="text-align: center; margin-top: 10%">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image View</title>
+
+  <style>
+    .container {
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 1rem;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="center">
       <img id="img" src="loading.jpg" />
     </div>
-  </body>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const src = params.get("img");
-    if (src.replace("/", "").startsWith("imgs")) img.src = src;
-    else img.src = "wrong.jpg";
-  </script>
+    <div>
+      <p id="msg"></p>
+    </div>
+    <div>
+      <p id="time"></p>
+    </div>
+  </div>
+</body>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const hash = params.get("hash");
+
+  (async function main() {
+    try {
+      let metadata = await (await fetch('/metadata/' + hash + '.json')).json();
+      console.log(metadata);
+      let { image, message, date } = metadata;
+      img.src = image;
+      msg.innerHTML = '재난 메시지 : ' + message;
+      time.innerText = '발생 시간 : ' + new Date(date);
+    } catch {
+      img.src = 'wrong.jpg'
+    }
+  })()
+</script>
+
 </html>

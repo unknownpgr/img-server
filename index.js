@@ -15,10 +15,19 @@ app.get("/", (req, res) => res.redirect("/index.html"));
 
 // Upload image
 app.post("/upload", upload.single("img"), (req, res) => {
-  console.log(new Date());
-  console.log(req.file);
-  console.log('');
-  res.status(200).send({ filename: path.join("imgs", req.file.filename) });
+  let { message } = req.body;
+  let { filename } = req.file;
+  let imgFile = path.join("imgs", req.file.filename);
+  let metaFile = path.join(__dirname, "public", "metadata", req.file.filename + '.json');
+
+  let metadata = {
+    date: new Date(),
+    image: imgFile,
+    message
+  };
+
+  fs.writeFileSync(metaFile, JSON.stringify(metadata));
+  res.status(200).send('/?hash=' + filename);
 });
 
 // Show image lists
